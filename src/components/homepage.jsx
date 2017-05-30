@@ -1,6 +1,8 @@
 import * as axios from 'axios';
 import * as React from 'react';
 import {SurveyList} from './survey-list';
+import {store} from './../redux/store';
+import {searchForSurveys} from './../redux/actions';
 
 export class Homepage extends React.Component
 {
@@ -10,15 +12,23 @@ export class Homepage extends React.Component
 
         this.state = {};
         this.requestTimer = null;
+        this.unsubscribe = null;
     }
 
     componentDidMount()
     {
-        axios
-            .get('http://localhost:3333/surveys')
-            .then(response => this.setState({surveys: response.data}))
-            .catch(console.error)
-        ;
+        this.setState({surveys: store.getState().surveys});
+
+        store.dispatch(searchForSurveys());
+
+        this.unsubscribe = store.subscribe(() => {
+            this.setState({surveys: store.getState().surveys});
+        });
+    }
+
+    componentWillUnmount()
+    {
+        this.unsubscribe();
     }
 
     onSearchChange(event)
@@ -30,11 +40,7 @@ export class Homepage extends React.Component
         }
 
         this.requestTimer = setTimeout(() => {
-            axios
-                .get('http://localhost:3333/surveys', {params: {name: name}})
-                .then(response => this.setState({surveys: response.data}))
-                .catch(console.error)
-            ;
+            store.dispatch(searchForSurveys(name));
         }, 250);
     }
 

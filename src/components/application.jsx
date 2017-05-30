@@ -3,6 +3,7 @@ import {Header} from './header';
 import {Homepage} from './homepage';
 import {Footer} from './footer';
 import {BrowserRouter, Route} from 'react-router-dom';
+import {Survey} from './survey';
 
 export class Application extends React.Component
 {
@@ -14,7 +15,10 @@ export class Application extends React.Component
 
                 <div className="container-fluid">
                     <BrowserRouter>
-                        <Route exact path="/" component={Homepage} />
+                        <div>
+                            <Route exact path="/" component={Homepage} />
+                            <Route exact path="/surveys/:id" component={Survey} />
+                        </div>
                     </BrowserRouter>
                 </div>
 
