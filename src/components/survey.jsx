@@ -2,7 +2,7 @@ import * as React from 'react';
 import {get, post} from 'axios';
 import {Redirect} from 'react-router-dom';
 import {store} from './../redux/store';
-import {displaySurvey} from './../redux/actions';
+import {displaySurvey, answerSurvey} from './../redux/actions';
 
 export class Survey extends React.Component
 {
@@ -15,12 +15,19 @@ export class Survey extends React.Component
 
     componentDidMount()
     {
-        this.setState({survey: store.getState().survey});
+        this.updateState();
 
         store.dispatch(displaySurvey(this.props.match.params.id));
 
-        this.unsubscribe = store.subscribe(() => {
-            this.setState({survey: store.getState().survey})
+        this.unsubscribe = store.subscribe(this.updateState.bind(this));
+    }
+
+    updateState()
+    {
+        this.setState({
+            survey: store.getState().survey,
+            redirect: store.getState().survey && store.getState().surveyAnswer &&
+                store.getState().surveyAnswer.survey === store.getState().survey._id
         });
     }
 
@@ -33,38 +40,17 @@ export class Survey extends React.Component
     {
         event.preventDefault();
 
-        let data = {
-            user: {
-                email: this.refs.email.value,
-                name: this.refs.username.value
-            },
-            answers: []
-        };
-
-        this.state.survey.questions.map((question, index) => {
-            let checkedBox = this.refs[`question-group-${index}`].querySelector('input:checked');
-
-            data.answers[index] = {
-                question: index,
-                choice: parseInt(checkedBox.dataset.index)
-            };
-        });
-
-        post(`http://localhost:3333/surveys/${this.state.survey._id}/answers`, data)
-            .then(response => {
-                this.setState(Object.assign(this.state, {
-                    answer: response.data
-                }));
-            })
-            .catch(console.error)
-        ;
+        store.dispatch(answerSurvey(
+            this.state.survey,
+            this.refs.form
+        ));
 
         return false;
     }
 
     render()
     {
-        if (this.state.answer) {
+        if (this.state.redirect) {
             return <Redirect to="/" />;
         }
 
@@ -73,7 +59,7 @@ export class Survey extends React.Component
         }
 
         return (
-            <form ref="survey" onSubmit={this.answer.bind(this)}>
+            <form ref="form" onSubmit={this.answer.bind(this)}>
                 <div className="jumbotron">
                     <h1>{this.state.survey.name}</h1>
                     <p>{this.state.survey.description}</p>
@@ -83,7 +69,7 @@ export class Survey extends React.Component
                         <div className="panel-heading">
                             <h4 className="panel-title">{question.title}</h4>
                         </div>
-                        <div className="panel-body" ref={`question-group-${questionIndex}`}>
+                        <div className="panel-body" id={`question-group-${questionIndex}`}>
                             {question.answers.map((answer, index) => (
                                 <div className="form-group" key={index}>
                                     <div className="radio">
@@ -101,10 +87,10 @@ export class Survey extends React.Component
                     <div className="panel-body">
                         <div className="form-inline">
                             <div className="form-group">
-                                <input ref="email" type="email" className="form-control" placeholder="email" />
+                                <input name="email" type="email" className="form-control" placeholder="email" />
                             </div>
                             <div className="form-group">
-                                <input ref="username" type="type" className="form-control" placeholder="Firstname Lastname" />
+                                <input name="username" type="type" className="form-control" placeholder="Firstname Lastname" />
                             </div>
                             <button type="submit" className="btn btn-success">Answer</button>
                         </div>
