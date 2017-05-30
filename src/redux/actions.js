@@ -1,4 +1,5 @@
 import * as axios from 'axios';
+import {store} from './store';
 
 /**
  * Triggered when a user try to find a given survey
@@ -14,6 +15,11 @@ export const DISPLAY_SURVEY = 'DISPLAY_SURVEY';
  * Answer to a survey
  */
 export const ANSWER_SURVEY = 'ANSWER_SURVEY';
+
+/**
+ * Notify something
+ */
+export const NOTIFY = 'NOTIFY';
 
 /**
  * Actions Creator
@@ -69,8 +75,6 @@ export function answerSurvey(survey, form) {
         };
     });
 
-    console.log(data);
-
     return new Promise((resolve, reject) => {
         axios
             .post(`http://localhost:3333/surveys/${survey._id}/answers`, data)
@@ -78,10 +82,17 @@ export function answerSurvey(survey, form) {
             .catch(reject)
         ;
     }).then(response => {
-        console.log(response.data);
         return {
             type: ANSWER_SURVEY,
             answer: response.data
         };
     });
+}
+
+export function notify(message, kind = 'info') {
+    return {
+        type: NOTIFY,
+        message,
+        kind
+    };
 }

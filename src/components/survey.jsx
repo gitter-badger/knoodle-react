@@ -2,7 +2,7 @@ import * as React from 'react';
 import {get, post} from 'axios';
 import {Redirect} from 'react-router-dom';
 import {store} from './../redux/store';
-import {displaySurvey, answerSurvey} from './../redux/actions';
+import {displaySurvey, answerSurvey, notify} from './../redux/actions';
 
 export class Survey extends React.Component
 {
@@ -43,7 +43,7 @@ export class Survey extends React.Component
         store.dispatch(answerSurvey(
             this.state.survey,
             this.refs.form
-        ));
+        )).then(() => console.log('test ?') || store.dispatch(notify('Thanks for your answer !', 'success')));
 
         return false;
     }

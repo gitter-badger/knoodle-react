@@ -4,6 +4,7 @@ import {Homepage} from './homepage';
 import {Footer} from './footer';
 import {BrowserRouter, Route} from 'react-router-dom';
 import {Survey} from './survey';
+import {FlashMessages} from './flash-messages';
 
 export class Application extends React.Component
 {
@@ -14,6 +15,7 @@ export class Application extends React.Component
                 <Header>header</Header>
 
                 <div className="container-fluid">
+                    <FlashMessages />
                     <BrowserRouter>
                         <div>
                             <Route exact path="/" component={Homepage} />
