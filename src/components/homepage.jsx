@@ -1,27 +1,52 @@
+import * as axios from 'axios';
 import * as React from 'react';
-import {surveys} from './../fixtures/surveys';
+import {SurveyList} from './survey-list';
 
 export class Homepage extends React.Component
 {
+    constructor(props)
+    {
+        super(props);
+
+        this.state = {};
+        this.requestTimer = null;
+    }
+
+    componentDidMount()
+    {
+        axios
+            .get('http://localhost:3333/surveys')
+            .then(response => this.setState({surveys: response.data}))
+            .catch(console.error)
+        ;
+    }
+
+    onSearchChange(event)
+    {
+        let name = event.target.value;
+
+        if (this.requestTimer !== null) {
+            clearTimeout(this.requestTimer);
+        }
+
+        this.requestTimer = setTimeout(() => {
+            axios
+                .get('http://localhost:3333/surveys', {params: {name: name}})
+                .then(response => this.setState({surveys: response.data}))
+                .catch(console.error)
+            ;
+        }, 250);
+    }
+
     render()
     {
         return (
             <div ref="homepage">
                 <div className="jumbotron">
-                    <h1>Knoodle</h1>
-                    <p>In Survey We Trust !</p>
+                    <h1>Find what's matter for you !!!!</h1>
+                    <input className="form-control input-lg" type="text" onChange={this.onSearchChange.bind(this)}/>
                 </div>
-                <div className="row">
-                    {surveys.map(survey => 
-                        <div className="col-md-6 panel panel-default" key={survey._id}>
-                            <div className="panel-body">
-                                <h4>{survey.name}</h4>
-                                <hr/>
-                                <p>Short description ...</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <SurveyList surveys={this.state.surveys || []}></SurveyList>
             </div>
         );
     }

@@ -4,21 +4,32 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently 'npm run server:watch' 'npm run webpack:watch' 'browser-sync start --proxy http://localhost:8080 --files dist/**/*'",
+    "webpack": "webpack",
+    "webpack:watch": "webpack -w",
+    "server": "node src/http/server.js",
+    "server:watch": "nodemon -w src/http/server.js --exec 'npm run server'"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.16.1",
     "bootstrap": "^3.3.7",
+    "express": "^4.15.3",
     "jquery": "^3.2.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "browser-sync": "^2.18.12",
+    "concurrently": "^3.4.0",
     "jsx-loader": "^0.13.2",
+    "nodemon": "^1.11.0",
     "webpack": "^2.6.1"
   }
 }
