@@ -27,7 +27,7 @@ export const NOTIFY = 'NOTIFY';
 export function searchForSurveys(term = '') {
     return new Promise((resolve, reject) => {
         axios
-            .get(`http://localhost:3333/surveys`, {params: {name: term}})
+            .get(`${process.env.API_BASE_URL}/surveys`, {params: {name: term}})
             .then(resolve)
             .catch(reject)
         ;
@@ -40,18 +40,15 @@ export function searchForSurveys(term = '') {
 }
 
 export function displaySurvey(id) {
-    return new Promise((resolve, reject) => {
-        axios
-            .get(`http://localhost:3333/surveys/${id}`)
-            .then(resolve)
-            .catch(reject)
-        ;
-    }).then(response => {
-        return {
-            type: DISPLAY_SURVEY,
-            survey: response.data
-        };
-    });
+    return axios
+        .get(`${process.enc.API_BASE_URL}/surveys/${id}`)
+        .then(response => {
+            return {
+                type: DISPLAY_SURVEY,
+                survey: response.data
+            };
+        })
+    ;
 }
 
 export function answerSurvey(survey, form) {
@@ -77,7 +74,7 @@ export function answerSurvey(survey, form) {
 
     return new Promise((resolve, reject) => {
         axios
-            .post(`http://localhost:3333/surveys/${survey._id}/answers`, data)
+            .post(`${process.env.API_BASE_URL}/surveys/${survey._id}/answers`, data)
             .then(resolve)
             .catch(reject)
         ;
@@ -95,4 +92,16 @@ export function notify(message, kind = 'info') {
         message,
         kind
     };
+}
+
+export function notifyAnswer(answer) {
+    return axios
+        .get(`${process.env.API_BASE_URL}/surveys/${answer.survey}`)
+        .then(response => {
+            return notify(
+                `Thanks to ${answer.user.name} for his answer on ${response.data.name}.`,
+                'info'
+            );
+        })
+    ;
 }

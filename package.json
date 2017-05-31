@@ -4,7 +4,7 @@
   "description": "",
   "main": "test.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma",
     "start": "concurrently 'npm run server:watch' 'npm run webpack:watch' 'browser-sync start --proxy http://localhost:8080 --files dist/**/*'",
     "webpack": "webpack",
     "webpack:watch": "webpack -w",
