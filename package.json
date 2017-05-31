@@ -18,6 +18,8 @@
     "@types/axios": "^0.14.0",
     "@types/node": "^7.0.22",
     "@types/react": "^15.0.25",
+    "@types/redux": "^3.6.0",
+    "@types/redux-promise": "^0.5.24",
     "browser-sync": "^2.18.12",
     "concurrently": "^3.4.0",
     "nodemon": "^1.11.0",
