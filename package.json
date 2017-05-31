@@ -10,7 +10,7 @@
     "compile:watch": "tsc --pretty --watch",
     "webpack": "webpack",
     "webpack:watch": "webpack -w",
-    "browser:sync": "browser-sync start --server --files dist/**/*"
+    "browser:sync": "browser-sync start --server --files dist/bundle.js"
   },
   "author": "",
   "license": "ISC",
