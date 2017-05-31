@@ -1,0 +1,37 @@
+{
+  "name": "knoodle-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently 'npm run compile:watch' 'npm run webpack:watch' 'npm run browser:sync'",
+    "compile": "tsc --pretty",
+    "compile:watch": "tsc --pretty --watch",
+    "webpack": "webpack",
+    "webpack:watch": "webpack -w",
+    "browser:sync": "browser-sync start --server --files dist/**/*"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^15.0.25",
+    "browser-sync": "^2.18.12",
+    "concurrently": "^3.4.0",
+    "nodemon": "^1.11.0",
+    "source-map-loader": "^0.2.1",
+    "ts-loader": "^2.1.0",
+    "typescript": "^2.3.4",
+    "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "express": "^4.15.3",
+    "jquery": "^3.2.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.6.0",
+    "redux-promise": "^0.5.3"
+  }
+}
